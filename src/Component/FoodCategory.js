@@ -17,40 +17,51 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@radix-ui/react-label";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import { useFoodCategory } from "@/app/_provider/food-category";
 
 export function FoodCategory() {
+  const { categories, loading, createCategory, deleteCategory } =
+    useFoodCategory();
+
   const [category, setCategory] = useState([]);
   const [newCategory, setNewCategory] = useState("");
-  console.log(category, "category");
+  // console.log(category, "category");
 
   const handleSubmit = async () => {
+    if (!newCategory.trim()) {
+      toast.error("Please enter category name");
+    }
     try {
-      const res = await axios.post("http://localhost:247/foodcategory", {
-        categoryName: newCategory,
-      });
-
-      setCategory((prev) => [...prev, res.data]);
-
+      await createCategory(newCategory);
       setNewCategory("");
     } catch (error) {
-      console.error("Category is not found", error);
+      console.error(error);
+      toast.error("Failed to add category");
     }
   };
 
-  const getCategory = async () => {
-    try {
-      const res = await axios.get("http://localhost:247/foodcategory");
-      console.log("res", res);
-      setCategory(res.data);
-    } catch (error) {
-      console.error("Category is not found", error);
-    }
-  };
+  // const handleDeleteButton = async (id) => {
+  //   try {
+  //     await deleteCategory(id);
+  //   } catch (error) {
+  //     toast.error("Failed to delete category");
+  //   }
+  // };
 
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    getCategory();
-  }, []);
+  if (loading) {
+    return <div>...loading</div>;
+  }
+
+  // const getCategory = async () => {
+  //   try {
+  //     const res = await axios.get("http://localhost:247/foodcategory");
+  //     console.log("res", res);
+  //     setCategory(res.data);
+  //   } catch (error) {
+  //     console.error("Category is not found", error);
+  //   }
+  // };
 
   return (
     <div className="flex flex-col p-6 items-start gap-4 self-stretch rounded-xl bg-white">
@@ -58,8 +69,16 @@ export function FoodCategory() {
         Dishes Category
       </div>
       <div className="flex w-full flex-wrap gap-3">
-        {category.map((item) => (
-          <Badge variant="secondary" key={item._id}>
+        {categories.map((item) => (
+          <Badge variant="secondary" key={item._id} className="relative">
+            <button
+              className="absolute w-7 h-7 top-8 right-4 bg-white p-1 rounded-full shadow"
+              onClick={() => {
+                deleteCategory(item._id);
+              }}
+            >
+              x
+            </button>
             {item.categoryName}
             <Badge>112</Badge>
           </Badge>

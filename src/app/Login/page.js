@@ -14,22 +14,29 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { useFormik } from "formik";
 import axios from "axios";
+import * as Yup from "yup";
 
 export default function LoginPage({}) {
   const router = useRouter();
   const handleClickSignup = () => {
     router.push("/Signup");
   };
+
   const formik = useFormik({
     initialValues: {
       email: "",
       password: "",
     },
+    validationSchema: Yup.object().shape({
+      email: Yup.string().email("Invalid email").required("Required"),
+      password: Yup.string().required("Required"),
+    }),
     onSubmit: async (values) => {
       const { email, password } = values;
       await loginUser(email, password);
     },
   });
+
   const loginUser = async (email, password) => {
     try {
       const response = await axios.post(
@@ -39,11 +46,13 @@ export default function LoginPage({}) {
           password: password,
         }
       );
+      // console.log("response", response);
+      localStorage.setItem("token", response.data.token);
       router.push("/");
-    } catch (err) {
-      // setApiError(err.response?.data);
+    } catch (error) {
+      console.log(error.response?.data);
     } finally {
-      console.log("finished");
+      // console.log("finished");
     }
   };
   const { values, handleSubmit, handleChange } = formik;

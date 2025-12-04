@@ -45,7 +45,7 @@ export default function ForgetPasswordPreview() {
   async function onSubmit() {
     try {
       // Assuming a function to send reset email
-      console.log(values);
+      // console.log(values);
       toast.success("Password reset email sent. Please check your inbox.");
     } catch (error) {
       console.error("Error sending password reset email", error);

@@ -193,6 +193,7 @@ import { useEffect, useState } from "react";
 import { CategoryFoods } from "./CategoryFoods";
 import UploadPicture from "./UploadPicture";
 import Image from "next/image";
+import UpdateIcon from "@/app/Icons/UpdateIcon";
 
 export function Food() {
   const [category, setCategory] = useState([]);
@@ -203,13 +204,14 @@ export function Food() {
     ingredients: "",
     category: "",
   });
+
   const handleFoodSubmit = async (id) => {
     try {
       const res = await axios.post("http://localhost:247/food", {
         ...food,
         category: id,
       });
-      setFoodList((prev) => [...prev, res.data]);
+      // setFoodList((prev) => [...prev, res.data]);
       setFood({
         foodName: "",
         price: "",
@@ -224,7 +226,7 @@ export function Food() {
   const getCategory = async () => {
     try {
       const res = await axios.get("http://localhost:247/foodcategory");
-      console.log("res", res);
+      // console.log("res", res);
       setCategory(res.data);
     } catch (error) {
       console.error("Category is not found", error);
@@ -236,17 +238,19 @@ export function Food() {
   }, []);
   return (
     <div>
-      {" "}
       {category.map((item) => (
         <div
           key={item._id}
           className="flex w-[1171px] p-5 flex-col items-start gap-4 rounded-xl bg-white"
         >
           <div>{item.categoryName}</div>
-          <div className="flex gap-4">
+          <div className="grid grid-cols-4 gap-4">
             <Dialog>
               <form>
                 <DialogTrigger asChild>
+                  {/* <Test item={item} /> */}
+
+                  {/* hello */}
                   {/* <Button variant="outline"> */}
                   <div className="flex flex-col justify-center items-center gap-6 flex-1 self-stretch p-2 px-4 rounded-[20px] border border-dashed border-[#EF4444] w-[270px] h-[241px]">
                     <div className="flex w-9 h-9 justify-center items-center gap-2 rounded-full bg-[#EF4444] text-white">
@@ -255,7 +259,7 @@ export function Food() {
                     <div className="text-[#18181B] text-center font-inter text-sm font-medium leading-5 flex flex-col">
                       Add new Dish to {item.categoryName}
                     </div>
-                  </div>{" "}
+                  </div>
                   {/* </Button> */}
                 </DialogTrigger>
                 <DialogContent className="sm:max-w-[425px]">
@@ -298,11 +302,27 @@ export function Food() {
                         }
                       />
                     </div>
-                    <div className="grid gap-2">
+                    <div className="grid gap-2 relative ">
                       <Label>Food image</Label>
 
-                      {food.image ? (
-                        <div className="relative w-full h-[150px] rounded-xl overflow-hidden">
+                      <UploadPicture
+                        onUpload={(url) => setFood({ ...food, image: url })}
+                        food={food}
+                      />
+                      <UpdateIcon />
+
+                      {/* {console.log(food)} */}
+                      {food.image && (
+                        <button
+                          onClick={() => setFood({ ...food, image: "" })}
+                          className="absolute w-7 h-7 top-8 right-4 bg-white p-1 rounded-full shadow"
+                        >
+                          ✕
+                        </button>
+                      )}
+
+                      {/* {food.image ? (
+                        <div className="relative w-full h-[150px] rounded-xl overflow-hidden ">
                           <Image
                             src={food.image}
                             alt="Food preview"
@@ -311,7 +331,7 @@ export function Food() {
                           />
                           <button
                             onClick={() => setFood({ ...food, image: "" })}
-                            className="absolute top-2 right-2 bg-white p-1 rounded-full shadow"
+                            className="absolute w-full h-[150px] top-2 right-2 bg-white p-1 rounded-full shadow"
                           >
                             ✕
                           </button>
@@ -320,7 +340,7 @@ export function Food() {
                         <UploadPicture
                           onUpload={(url) => setFood({ ...food, image: url })}
                         />
-                      )}
+                      )} */}
                     </div>
                   </div>
                   <DialogFooter>
@@ -331,10 +351,23 @@ export function Food() {
                 </DialogContent>
               </form>
             </Dialog>
-            <CategoryFoods id={item._id} />
+            <CategoryFoods id={item._id} category={category} />
           </div>
         </div>
       ))}
     </div>
   );
 }
+
+// const Test = ({ item }) => {
+//   return (
+//     <div className="flex flex-col justify-center items-center gap-6 flex-1 self-stretch p-2 px-4 rounded-[20px] border border-dashed border-[#EF4444] w-[270px] h-[241px]">
+//       <div className="flex w-9 h-9 justify-center items-center gap-2 rounded-full bg-[#EF4444] text-white">
+//         <Plus />
+//       </div>{" "}
+//       <div className="text-[#18181B] text-center font-inter text-sm font-medium leading-5 flex flex-col">
+//         Add new Dish to {item.categoryName}
+//       </div>
+//     </div>
+//   );
+// };

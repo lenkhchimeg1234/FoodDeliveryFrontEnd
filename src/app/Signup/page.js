@@ -57,14 +57,14 @@ export default function SignupPage() {
         "http://localhost:247/authentication/signup",
         { email: email, password: password }
       );
-      console.log("successfully create acc");
+      // console.log("successfully create acc");
       if (!apiError) {
         router.push("/Login");
       }
     } catch (err) {
       setApiError(err.response?.data);
     } finally {
-      console.log("finished");
+      // console.log("finished");
     }
   };
 
@@ -75,7 +75,7 @@ export default function SignupPage() {
       confirmPassword: "",
     },
     onSubmit: async (values) => {
-      console.log(values, "values");
+      // console.log(values, "values");
       const { email, password } = values;
       await createUser(email, password);
     },

@@ -1,10 +1,18 @@
 "use client";
-
 import axios from "axios";
 import { useEffect, useState } from "react";
+import * as React from "react";
+import { FoodCard } from "./FoodCard";
 
-export const CategoryFoods = ({ id }) => {
+export const CategoryFoods = ({ id, category, item }) => {
   const [foodList, setFoodList] = useState([]);
+  const [foodUpdate, setFoodUpdate] = useState({
+    foodName: item?.foodName,
+    price: item?.price,
+    image: item?.image,
+    ingredients: item?.ingredients,
+    category: item?.categoryName,
+  });
 
   const getFood = async () => {
     try {
@@ -14,27 +22,51 @@ export const CategoryFoods = ({ id }) => {
       console.error("Food is not found", error);
     }
   };
+  const updateFood = async (id, foodUpdate) => {
+    try {
+      const response = await axios.put(`http://localhost:247/food/${id}`, {
+        foodName: foodUpdate.foodName,
+        price: foodUpdate.price,
+        image: foodUpdate.image,
+        ingredients: foodUpdate.ingredients,
+        category: foodUpdate.category,
+      });
+      setFoodUpdate(response.data);
+    } catch (error) {
+      console.error("Update is not found", error);
+    }
+  };
+
+  // const handleFoodUpdateSubmit = async (id, foodUpdate) => {
+  //   try {
+  //     const res = await axios.post("http://localhost:247/food", {
+  //       ...foodUpdate,
+  //       category: id,
+  //     });
+
+  //     // setFoodUpdate({
+  //     //   foodName: "",
+  //     //   price: "",
+  //     //   image: "",
+  //     //   ingredients: "",
+  //     //   category: "",
+  //     // });
+  //   } catch (error) {
+  //     console.error("Food is not found", error);
+  //   }
+  // };
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     getFood();
-  });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return foodList.map((item) => (
-    <div
+    <FoodCard
       key={item._id}
-      className="flex p-4 w-[270.75px] h-[241px] flex-col items-start gap-5 flex-1 self-stretch rounded-[20px] border border-[#E4E4E7] bg-white"
-    >
-      {/* <Image></Image> */}
-      <div className="flex items-center justify-between">
-        <div className="text-[#EF4444] font-inter text-sm font-medium leading-5 w-[190px]">
-          {item.foodName}
-        </div>
-        <div className="text-[#09090B] font-inter text-xs font-normal leading-4">
-          ${item.price}
-        </div>
-      </div>
-      <div>{item.ingredients}</div>
-    </div>
+      item={item}
+      category={category}
+      handleFoodUpdateSubmit={updateFood}
+    />
   ));
 };
