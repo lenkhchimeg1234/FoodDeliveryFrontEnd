@@ -24,7 +24,7 @@ export function FoodCategory() {
   const { categories, loading, createCategory, deleteCategory } =
     useFoodCategory();
 
-  const [category, setCategory] = useState([]);
+  
   const [newCategory, setNewCategory] = useState("");
   // console.log(category, "category");
 
@@ -53,15 +53,7 @@ export function FoodCategory() {
     return <div>...loading</div>;
   }
 
-  // const getCategory = async () => {
-  //   try {
-  //     const res = await axios.get("http://localhost:247/foodcategory");
-  //     console.log("res", res);
-  //     setCategory(res.data);
-  //   } catch (error) {
-  //     console.error("Category is not found", error);
-  //   }
-  // };
+ 
 
   return (
     <div className="flex flex-col p-6 items-start gap-4 self-stretch rounded-xl bg-white">

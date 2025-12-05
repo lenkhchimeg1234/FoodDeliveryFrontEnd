@@ -19,12 +19,13 @@ export const useFoodCategory = () => {
 export const FoodCategoryProvider = ({ children }) => {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [foodList, setFoodList] = useState([]);
 
   const getCategory = async () => {
     setLoading(true);
     try {
       const res = await axios.get("http://localhost:247/foodcategory");
-    //   console.log("res", res);
+
       setCategories(res.data);
     } catch (error) {
       console.error("Category is not found", error);
@@ -36,7 +37,7 @@ export const FoodCategoryProvider = ({ children }) => {
   const createCategory = async (categoryName) => {
     try {
       const token = localStorage.getItem("token") || "";
-      const res = await axios.post(
+      await axios.post(
         "http://localhost:247/foodcategory",
         {
           categoryName: categoryName,
@@ -50,8 +51,6 @@ export const FoodCategoryProvider = ({ children }) => {
 
       toast.success("Category asses succesfully!");
       getCategory();
-
-      //   setNewCategory("");
     } catch (error) {
       console.error(error);
       toast.error("Failed to add category");
@@ -75,13 +74,114 @@ export const FoodCategoryProvider = ({ children }) => {
     }
   };
 
+  const getFood = async (id) => {
+    // setLoading(true);
+    try {
+      const res = await axios.get(`http://localhost:247/food/${id}`);
+
+      setFoodList((prev) => {
+        const exists = prev.some((item) => item.id === id);
+
+        // If exists → update
+        if (exists) {
+          return prev.map((item) =>
+            item.id === id ? { ...item, data: res.data } : item
+          );
+        }
+
+        // If not exists → add new
+        return [...prev, { id, data: res.data }];
+      });
+    } catch (error) {
+      console.error("Food is not found", error);
+    } finally {
+      //   setLoading(false);
+    }
+  };
+
+  const createFood = async (id, food) => {
+    try {
+      const token = localStorage.getItem("token") || "";
+      const res = await axios.post(
+        "http://localhost:247/food",
+        {
+          ...food,
+          category: id,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      getFood(id);
+    } catch (error) {
+      console.error("Food is not found", error);
+    }
+  };
+
+  const deleteFood = async (id) => {
+    try {
+      const token = localStorage.getItem("token") || "";
+      await axios.delete(`http://localhost:247/food/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      toast.success("Food deleted successfully!");
+      getFood(id);
+    } catch (error) {
+      console.log("Error to delete foods", error);
+    }
+  };
+
+  const updateFood = async (id, foodUpdate) => {
+    console.log(id, foodUpdate);
+    // setOpen(true);
+    try {
+      const token = localStorage.getItem("token") || "";
+      await axios.put(
+        `http://localhost:247/food/${id}`,
+        {
+          foodName: foodUpdate.foodName,
+          price: foodUpdate.price,
+          image: foodUpdate.image,
+          ingredients: foodUpdate.ingredients,
+          category: foodUpdate.category,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      await getFood(foodUpdate.category);
+    } catch (error) {
+      console.error("Update is not found", error);
+    } finally {
+      //   setOpen(false);
+    }
+  };
+
   useEffect(() => {
     getCategory();
   }, []);
 
   return (
     <FoodCategoryContext.Provider
-      value={{ categories, loading, deleteCategory, createCategory }}
+      value={{
+        categories,
+        loading,
+        deleteCategory,
+        createCategory,
+        foodList,
+        getFood,
+        createFood,
+        deleteFood,
+        updateFood,
+        getCategory,
+      }}
     >
       {children}
     </FoodCategoryContext.Provider>

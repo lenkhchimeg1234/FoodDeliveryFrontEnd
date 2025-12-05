@@ -27,27 +27,38 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import TrashIcon from "@/app/Icons/TrashIcon";
 import axios from "axios";
+import {
+  FoodCategoryProvider,
+  useFoodCategory,
+} from "@/app/_provider/food-category";
 
-export const FoodCard = ({ item, category, handleFoodUpdateSubmit }) => {
-  // console.log("category", category);
+export const FoodCard = ({ item, category }) => {
+  const { updateFood, deleteFood, getFood, categories, getCategory } =
+    useFoodCategory();
+  console.log(category, "category");
+  console.log(item, "item");
+
   const [foodUpdate, setFoodUpdate] = useState({
     foodName: item?.foodName,
     price: item?.price,
     image: item?.image,
     ingredients: item?.ingredients,
-    category: item?.categoryName,
+    category: category._id,
   });
 
-  const deleteFood = async (id) => {
+  const [open, setOpen] = useState(false);
+
+  const handleUpdateFood = async (id) => {
     try {
-      const res = await axios.delete(`http://localhost:247/food/${id}`);
-      console.log(res, "response ");
+      await updateFood(id, foodUpdate);
+      getCategory();
     } catch (error) {
-      console.log("Error to delete foods", error);
+      console.error("Update is not found", error);
+    } finally {
+      setOpen(false);
     }
   };
 
-  // console.log("foodUpdate", foodUpdate);
   return (
     <div
       key={item._id}
@@ -69,91 +80,88 @@ export const FoodCard = ({ item, category, handleFoodUpdateSubmit }) => {
           <Dialog>
             <form>
               <DialogTrigger asChild>
-                <UpdateIcon />
+                <UpdateIcon onClick={() => setOpen(true)} />
               </DialogTrigger>
-              <DialogContent className="sm:max-w-[425px]">
-                <DialogHeader>
-                  <DialogTitle>Dishes info</DialogTitle>
-                </DialogHeader>
-                <div className="grid gap-4">
-                  <div className="grid gap-3">
+              {open && (
+                <DialogContent className="sm:max-w-[425px]">
+                  <DialogHeader>
+                    <DialogTitle>Dishes info</DialogTitle>
+                  </DialogHeader>
+                  <div className="grid gap-4">
                     <div className="grid gap-3">
-                      <Label>Dishes name</Label>
+                      <div className="grid gap-3">
+                        <Label>Dishes name</Label>
+                        <Input
+                          value={foodUpdate.foodName || ""}
+                          onChange={(e) =>
+                            setFoodUpdate({
+                              ...foodUpdate,
+                              foodName: e.target.value,
+                            })
+                          }
+                        />
+                      </div>
+                      <Label htmlFor="name-1">Dish category</Label>
+
+                      <Select
+                        onValueChange={(value) =>
+                          setFoodUpdate({ ...foodUpdate, category: value })
+                        }
+                        defaultValue={item?.category}
+                      >
+                        <SelectTrigger className="w-[180px]">
+                          <SelectValue>{item?.categoryName}</SelectValue>
+                        </SelectTrigger>
+
+                        <SelectContent>
+                          <SelectGroup>
+                            {categories?.map((cat) => (
+                              <SelectItem key={cat._id} value={cat._id}>
+                                {cat.categoryName}
+                              </SelectItem>
+                            ))}
+                          </SelectGroup>
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    <div className="grid gap-3">
+                      <Label htmlFor="ingredients-1">Ingredients</Label>
                       <Input
-                        value={foodUpdate.foodName || ""}
+                        value={foodUpdate.ingredients || ""}
                         onChange={(e) =>
                           setFoodUpdate({
                             ...foodUpdate,
-                            foodName: e.target.value,
+                            ingredients: e.target.value,
                           })
                         }
                       />
                     </div>
-                    <Label htmlFor="name-1">Dish category</Label>
-
-                    <Select
-                      onValueChange={(value) =>
-                        setFoodUpdate({ ...foodUpdate, category: value })
-                      }
-                      defaultValue={item?.category}
-                    >
-                      <SelectTrigger className="w-[180px]">
-                        <SelectValue>{item?.categoryName}</SelectValue>
-                      </SelectTrigger>
-
-                      <SelectContent>
-                        <SelectGroup>
-                          {category?.map((cat) => (
-                            <SelectItem key={cat._id} value={cat._id}>
-                              {cat.categoryName}
-                            </SelectItem>
-                          ))}
-                        </SelectGroup>
-                      </SelectContent>
-                    </Select>
+                    <div className="grid gap-3">
+                      <Label>Food price</Label>
+                      <Input
+                        value={foodUpdate.price || ""}
+                        onChange={(e) =>
+                          setFoodUpdate({
+                            ...foodUpdate,
+                            price: e.target.value,
+                          })
+                        }
+                      />
+                    </div>
                   </div>
-
-                  <div className="grid gap-3">
-                    <Label htmlFor="ingredients-1">Ingredients</Label>
-                    <Input
-                      value={foodUpdate.ingredients || ""}
-                      onChange={(e) =>
-                        setFoodUpdate({
-                          ...foodUpdate,
-                          ingredients: e.target.value,
-                        })
-                      }
-                    />
-                  </div>
-                  <div className="grid gap-3">
-                    <Label>Food price</Label>
-                    <Input
-                      value={foodUpdate.price || ""}
-                      onChange={(e) =>
-                        setFoodUpdate({
-                          ...foodUpdate,
-                          price: e.target.value,
-                        })
-                      }
-                    />
-                  </div>
-                </div>
-                <DialogFooter>
-                  <DialogClose asChild>
-                    <Button
-                      onClick={() => deleteFood(item._id)}
-                      variant="outline"
-                    >
-                      <TrashIcon />
+                  <DialogFooter>
+                    <DialogClose asChild>
+                      <Button onClick={() => deleteFood(item._id)}>
+                        <TrashIcon />
+                      </Button>
+                    </DialogClose>
+                    <Button onClick={() => handleUpdateFood(item._id)}>
+                      Save changes
                     </Button>
-                  </DialogClose>
-                  <Button
-                    onClick={() => handleFoodUpdateSubmit(item._id, foodUpdate)}
-                  >
-                    Save changes
-                  </Button>
-                </DialogFooter>
-              </DialogContent>
+                  </DialogFooter>
+                </DialogContent>
+              )}
             </form>
           </Dialog>
         </div>
