@@ -33,8 +33,7 @@ import {
 } from "@/app/_provider/food-category";
 
 export const FoodCard = ({ item, category }) => {
-  const { updateFood, deleteFood, getFood, categories, getCategory } =
-    useFoodCategory();
+  const { updateFood, deleteFood, categories, getCategory } = useFoodCategory();
   console.log(category, "category");
   console.log(item, "item");
 

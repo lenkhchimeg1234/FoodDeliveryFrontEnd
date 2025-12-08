@@ -21,7 +21,7 @@ import Image from "next/image";
 import UpdateIcon from "@/app/Icons/UpdateIcon";
 import { useFoodCategory } from "@/app/_provider/food-category";
 
-export function Food({ getFood }) {
+export function Food({}) {
   const { loading, createFood, categories } = useFoodCategory();
 
   const [food, setFood] = useState({
@@ -35,9 +35,6 @@ export function Food({ getFood }) {
 
   const handleFoodSubmit = async (id) => {
     setOpen(true);
-    if (!setFood.trim()) {
-      toast.error("Please enter food ");
-    }
 
     try {
       await createFood(id, food);

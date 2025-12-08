@@ -15,7 +15,7 @@ export const CategoryFoods = ({ id, category }) => {
   if (foodList.length < 0) {
     return <div>...loading</div>;
   }
-
+  console.log("foodlist", foodList);
   return foodList
     .filter((item) => item.id === id)
     .map((item) =>
