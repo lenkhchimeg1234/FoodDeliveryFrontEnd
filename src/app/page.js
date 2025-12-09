@@ -1,6 +1,6 @@
-import { UserBody } from "@/Component/UserBody";
-import { UserFooter } from "@/Component/UserFooter";
-import { UserHeader } from "@/Component/UserHeader";
+import { UserFooter } from "@/app/HomePage/UserFooter";
+import { UserHeader } from "@/app/HomePage/UserHeader";
+import { UserBody } from "./HomePage/UserBody";
 
 export default function Home() {
   return (
