@@ -17,14 +17,14 @@ export function Foods({ categoryId }) {
 
   // const totalPrice = foodPrice * quantity;
 
-  const addToCart = () => {
+  const addToCart = (_id) => {
     const cart = JSON.parse(localStorage.getItem("cart")) || [];
-    const exist = cart.find((item) => item.categoryId === categoryId);
+    const exist = cart.find((item) => item.categoryId === _id);
 
     if (exist) {
-      exist.quantity += quantity;
+      exist.quantity = quantity;
     } else {
-      cart.push({ categoryId, quantity });
+      cart.push({ _id, quantity });
     }
 
     localStorage.setItem("cart", JSON.stringify(cart));
@@ -113,7 +113,9 @@ export function Foods({ categoryId }) {
                               </div>
                             </div>
                           </div>
-                          <Button onClick={addToCart}>Add to cart</Button>
+                          <Button onClick={() => addToCart(item._id)}>
+                            Add to cart
+                          </Button>
                         </div>
                       </div>
                     </DialogContent>
