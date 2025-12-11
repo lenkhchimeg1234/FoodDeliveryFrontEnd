@@ -115,6 +115,7 @@ export function UserHeader() {
             >
               Log in
             </Button>
+            <OrderSheet />
           </div>
         )}
       </div>

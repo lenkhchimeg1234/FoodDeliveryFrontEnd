@@ -94,7 +94,7 @@ export function Foods({ categoryId }) {
                                 Total price
                               </p>
                               <div className="text-(--text-text-foreground,#09090B) font-inter text-[24px] font-semibold leading-8 tracking-[-0.6px]">
-                                ${item.price}
+                                ₮{item.price}
                               </div>
                             </div>
                             <div className="flex flex-row gap-3 items-center">
@@ -130,7 +130,7 @@ export function Foods({ categoryId }) {
               {item.foodName}
             </div>
             <div className="text-[#09090B] font-inter text-[18px] font-normal leading-4">
-              ${item.price}
+              ₮{item.price}
             </div>
           </div>
           <div className="w-[365px] h-10 text-[14px] text-[#09090B] truncate">
