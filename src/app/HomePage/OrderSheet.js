@@ -177,145 +177,152 @@ export function OrderSheet({}) {
               Order
             </Button>
           </div>
-          <div className="bg-white flex flex-col justify-between items-start p-4 flex-1 self-stretch gap-5 rounded-[20px] ">
-            <h1 className="text-(--text-text-muted-foreground,#71717A) font-inter   text-[20px] font-semibold leading-7  tracking-[-0.5px]">
-              My cart
-            </h1>
-            {cart.map((item) => (
-              <div key={item._id}>
-                <div className="flex gap-6">
-                  <Image
-                    src={
-                      item.image ||
-                      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTx2qcKAz_hqMRda9TnCrnA1uZEmbAc6vLVQA&s"
-                    }
-                    alt="image"
-                    width={120}
-                    height={120}
-                    className="object-cover rounded-xl "
-                  />
+          {activeTab === "cart" && (
+            <div className="flex flex-col gap-6">
+              <div className="bg-white flex flex-col justify-between items-start p-4 flex-1 self-stretch gap-5 rounded-[20px] ">
+                <h1 className="text-(--text-text-muted-foreground,#71717A) font-inter   text-[20px] font-semibold leading-7  tracking-[-0.5px]">
+                  My cart
+                </h1>
+                {cart.map((item) => (
+                  <div key={item._id}>
+                    <div className="flex gap-6">
+                      <Image
+                        src={
+                          item.image ||
+                          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTx2qcKAz_hqMRda9TnCrnA1uZEmbAc6vLVQA&s"
+                        }
+                        alt="image"
+                        width={120}
+                        height={120}
+                        className="object-cover rounded-xl "
+                      />
 
-                  <div className=" flex flex-col justify-between gap-6 w-[305px]">
-                    <div className="flex flex-col gap-3">
-                      <div className="text-[#EF4444] font-inter text-4 font-medium leading-5 ">
-                        {item.foodName}
+                      <div className=" flex flex-col justify-between gap-6 w-[305px]">
+                        <div className="flex flex-col gap-3">
+                          <div className="text-[#EF4444] font-inter text-4 font-medium leading-5 ">
+                            {item.foodName}
+                          </div>
+                          <div className=" h-4 text-[14px] text-[#09090B] truncate">
+                            {item.ingredients}
+                          </div>
+                        </div>
+                        <div className="flex justify-between">
+                          <div className="flex flex-row gap-3 items-center">
+                            <div
+                              onClick={() => decrease(item._id)}
+                              className="cursor-pointer border rounded-full border-black w-8 h-8 flex justify-center items-center"
+                            >
+                              -
+                            </div>
+                            <div>{item.quantity}</div>
+                            <div
+                              onClick={() => increase(item._id)}
+                              className="cursor-pointer border rounded-full border-black w-8 h-8 flex justify-center items-center"
+                            >
+                              +
+                            </div>
+                          </div>
+                          <div>
+                            <p className="text-(--text-text-foreground,#09090B) font-inter text-base font-normal leading-6">
+                              Total price
+                            </p>
+                            <div className="text-(--text-text-foreground,#09090B) font-inter text-[16px] font-semibold leading-8 tracking-[-0.6px]">
+                              ₮{getItemTotal(item)}
+                            </div>
+                          </div>
+                        </div>
                       </div>
-                      <div className=" h-4 text-[14px] text-[#09090B] truncate">
-                        {item.ingredients}
-                      </div>
+
+                      <button
+                        onClick={() => removeItem(item._id)}
+                        className="text-red-500 text-2  border rounded-full border-red-500 cursor-pointer w-8 h-8"
+                      >
+                        x
+                      </button>
                     </div>
-                    <div className="flex justify-between">
-                      <div className="flex flex-row gap-3 items-center">
-                        <div
-                          onClick={() => decrease(item._id)}
-                          className="cursor-pointer border rounded-full border-black w-8 h-8 flex justify-center items-center"
-                        >
-                          -
-                        </div>
-                        <div>{item.quantity}</div>
-                        <div
-                          onClick={() => increase(item._id)}
-                          className="cursor-pointer border rounded-full border-black w-8 h-8 flex justify-center items-center"
-                        >
-                          +
-                        </div>
-                      </div>
-                      <div>
-                        <p className="text-(--text-text-foreground,#09090B) font-inter text-base font-normal leading-6">
-                          Total price
-                        </p>
-                        <div className="text-(--text-text-foreground,#09090B) font-inter text-[16px] font-semibold leading-8 tracking-[-0.6px]">
-                          ₮{getItemTotal(item)}
-                        </div>
-                      </div>
-                    </div>
+                    <div className="border-b custom-dash border-[#09090B]/50 p-2"></div>
                   </div>
+                ))}
+                <h1 className="text-(--text-text-muted-foreground,#71717A) font-inter   text-[20px] font-semibold leading-7  tracking-[-0.5px]">
+                  Delivery location
+                </h1>
+                <input
+                  className=" flex flex-col items-start p-[8px_12px] flex-1 self-stretch  rounded-[6px] border border-[#E4E4E7] bg-white shadow-sm"
+                  placeholder="Please share your complete address"
+                  value={location}
+                />
+              </div>
 
-                  <button
-                    onClick={() => removeItem(item._id)}
-                    className="text-red-500 text-2  border rounded-full border-red-500 cursor-pointer w-8 h-8"
-                  >
-                    x
-                  </button>
+              <div className="flex flex-col items-start justify-between p-4 gap-5 self-stretch rounded-[20px] bg-white">
+                <h1 className="text-(--text-text-muted-foreground,#71717A) font-inter   text-[20px] font-semibold leading-7  tracking-[-0.5px]">
+                  Payment info
+                </h1>
+                {cart.length > 0 && (
+                  <div className="flex w-[471px] justify-between   border-gray-200">
+                    <p className="text-[#71717A] font-inter text-[16px] font-normal leading-7">
+                      Items
+                    </p>
+                    <p className="text-[#09090B] text-right font-inter text-[16px] font-bold leading-7">
+                      ₮{getGrandTotal()}
+                    </p>
+                  </div>
+                )}
+                <div className="flex w-[471px] justify-between   border-gray-200">
+                  <p className="text-[#71717A] font-inter text-[16px] font-normal leading-7">
+                    Shipping
+                  </p>
+                  <p className="text-[#09090B] text-right font-inter text-[16px] font-bold leading-7">
+                    ₮6000
+                  </p>
                 </div>
-                <div className="border-b custom-dash border-[#09090B]/50 p-2"></div>
+                <div className="border-b custom-dash border-[#09090B]/50 p-2 w-full"></div>
+                <div className="flex w-[471px] justify-between   border-gray-200">
+                  <p className="text-[#71717A] font-inter text-[16px] font-normal leading-7">
+                    Total price
+                  </p>
+                  <p className="text-[#09090B] text-right font-inter text-[16px] font-bold leading-7">
+                    ₮{lastTotalPrice()}
+                  </p>
+                </div>
+
+                <Button
+                  onClick={handleCheckout}
+                  className="w-full h-10 bg-[#EF4444] text-white hover:bg-[#DC2626] rounded-full"
+                >
+                  Checkout
+                </Button>
+
+                <Dialog
+                  open={open}
+                  onOpenChange={() => setOpen((prev) => !prev)}
+                >
+                  <DialogContent className="sm:max-w-[425px]">
+                    <DialogHeader>
+                      <DialogTitle>You need to log in first</DialogTitle>
+                    </DialogHeader>
+
+                    <DialogFooter>
+                      <Button
+                        variant="default"
+                        className="cursor-pointer"
+                        onClick={handleClickLogin}
+                      >
+                        Log in
+                      </Button>
+                      <Button
+                        variant="default"
+                        className="bg-white text-black  cursor-pointer"
+                        onClick={handleClickSignup}
+                      >
+                        Sign up
+                      </Button>
+                    </DialogFooter>
+                  </DialogContent>
+                </Dialog>
               </div>
-            ))}
-            <h1 className="text-(--text-text-muted-foreground,#71717A) font-inter   text-[20px] font-semibold leading-7  tracking-[-0.5px]">
-              Delivery location
-            </h1>
-            <input
-              className=" flex flex-col items-start p-[8px_12px] flex-1 self-stretch  rounded-[6px] border border-[#E4E4E7] bg-white shadow-sm"
-              placeholder="Please share your complete address"
-            >
-              {location}
-            </input>
-          </div>
-
-          <div className="flex flex-col items-start justify-between p-4 gap-5 self-stretch rounded-[20px] bg-white">
-            <h1 className="text-(--text-text-muted-foreground,#71717A) font-inter   text-[20px] font-semibold leading-7  tracking-[-0.5px]">
-              Payment info
-            </h1>
-            {cart.length > 0 && (
-              <div className="flex w-[471px] justify-between   border-gray-200">
-                <p className="text-[#71717A] font-inter text-[16px] font-normal leading-7">
-                  Items
-                </p>
-                <p className="text-[#09090B] text-right font-inter text-[16px] font-bold leading-7">
-                  ₮{getGrandTotal()}
-                </p>
-              </div>
-            )}
-            <div className="flex w-[471px] justify-between   border-gray-200">
-              <p className="text-[#71717A] font-inter text-[16px] font-normal leading-7">
-                Shipping
-              </p>
-              <p className="text-[#09090B] text-right font-inter text-[16px] font-bold leading-7">
-                ₮6000
-              </p>
             </div>
-            <div className="border-b custom-dash border-[#09090B]/50 p-2 w-full"></div>
-            <div className="flex w-[471px] justify-between   border-gray-200">
-              <p className="text-[#71717A] font-inter text-[16px] font-normal leading-7">
-                Total price
-              </p>
-              <p className="text-[#09090B] text-right font-inter text-[16px] font-bold leading-7">
-                ₮{lastTotalPrice()}
-              </p>
-            </div>
-
-            <Button
-              onClick={handleCheckout}
-              className="w-full h-10 bg-[#EF4444] text-white hover:bg-[#DC2626] rounded-full"
-            >
-              Checkout
-            </Button>
-
-            <Dialog open={open} onOpenChange={() => setOpen((prev) => !prev)}>
-              <DialogContent className="sm:max-w-[425px]">
-                <DialogHeader>
-                  <DialogTitle>You need to log in first</DialogTitle>
-                </DialogHeader>
-
-                <DialogFooter>
-                  <Button
-                    variant="default"
-                    className="cursor-pointer"
-                    onClick={handleClickLogin}
-                  >
-                    Log in
-                  </Button>
-                  <Button
-                    variant="default"
-                    className="bg-white text-black  cursor-pointer"
-                    onClick={handleClickSignup}
-                  >
-                    Sign up
-                  </Button>
-                </DialogFooter>
-              </DialogContent>
-            </Dialog>
-          </div>
+          )}
+          {activeTab === "order" && <div>hello order</div>}
         </div>
       </SheetContent>
     </Sheet>
