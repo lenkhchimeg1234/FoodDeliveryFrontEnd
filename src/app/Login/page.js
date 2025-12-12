@@ -40,7 +40,7 @@ export default function LoginPage({}) {
   const loginUser = async (email, password) => {
     try {
       const response = await axios.post(
-        "http://localhost:247/authentication/login",
+        "https://fooddeliverybackend-cgbs.onrender.com/authentication/login",
         {
           email: email,
           password: password,

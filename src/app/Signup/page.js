@@ -54,7 +54,7 @@ export default function SignupPage() {
   const createUser = async (email, password) => {
     try {
       const response = await axios.post(
-        "http://localhost:247/authentication/signup",
+        "https://fooddeliverybackend-cgbs.onrender.com/authentication/signup",
         { email: email, password: password }
       );
       // console.log("successfully create acc");

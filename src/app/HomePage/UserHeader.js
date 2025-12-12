@@ -18,10 +18,13 @@ import {
 import { Input } from "@/components/ui/input";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 export function UserHeader() {
   const router = useRouter();
   const [token, setToken] = useState(null);
+  const [location, setLocation] = useState("");
+  const [open, setOpen] = useState(false);
 
   const handleClickLogin = () => {
     router.push("/Login");
@@ -29,8 +32,19 @@ export function UserHeader() {
   const handleClickSignup = () => {
     router.push("/Signup");
   };
+
+  const addToLocation = () => {
+    localStorage.setItem("location", location);
+    toast.success("Location saved succesfully");
+    setOpen(false);
+  };
+
   useEffect(() => {
     const t = localStorage.getItem("token");
+    const saved = localStorage.getItem("location");
+
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setLocation(saved);
     setToken(t);
   }, []);
   return (
@@ -55,42 +69,44 @@ export function UserHeader() {
         </div>
         {token ? (
           <div className="flex gap-3">
-            <Dialog>
-              <form>
-                <DialogTrigger asChild>
-                  <Button
-                    variant="default"
-                    className="bg-white rounded-full gap-1"
-                  >
-                    <MapPin className="text-[#EF4444]" />
-                    <p className="text-[#EF4444] font-inter text-[12px] font-normal leading-4">
-                      Delivery address:
-                    </p>
-                    <p className="text-[#71717A] font-inter text-[12px] font-normal leading-4">
-                      Add location
-                    </p>
-                    <ChevronRight className="text-[#71717A]" />
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="sm:max-w-[425px]">
-                  <DialogHeader>
-                    <DialogTitle>
-                      Please write your delivery address!
-                    </DialogTitle>
-                  </DialogHeader>
-                  <div className="grid gap-4">
-                    <div className="grid gap-3">
-                      <Input placeholder="Please share your complete address" />
-                    </div>
+            <Dialog open={open} onOpenChange={setOpen}>
+              <DialogTrigger asChild>
+                <Button
+                  variant="default"
+                  className="bg-white rounded-full gap-1"
+                  onClick={() => setOpen(true)}
+                >
+                  <MapPin className="text-[#EF4444]" />
+                  <p className="text-[#EF4444] font-inter text-[12px] font-normal leading-4">
+                    Delivery address:
+                  </p>
+                  <p className="text-[#71717A] font-inter text-[12px] font-normal leading-4">
+                    {location ? location : "Add location"}
+                  </p>
+                  <ChevronRight className="text-[#71717A]" />
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-[425px]">
+                <DialogHeader>
+                  <DialogTitle>Please write your delivery address!</DialogTitle>
+                </DialogHeader>
+                <div className="grid gap-4">
+                  <div className="grid gap-3">
+                    <Input
+                      type="text"
+                      value={location}
+                      onChange={(e) => setLocation(e.target.value)}
+                      placeholder="Please share your complete address"
+                    />
                   </div>
-                  <DialogFooter>
-                    <DialogClose asChild>
-                      <Button variant="outline">Cancel</Button>
-                    </DialogClose>
-                    <Button type="submit">Deliver here</Button>
-                  </DialogFooter>
-                </DialogContent>
-              </form>
+                </div>
+                <DialogFooter>
+                  <DialogClose asChild>
+                    <Button variant="outline">Cancel</Button>
+                  </DialogClose>
+                  <Button onClick={addToLocation}>Deliver here</Button>
+                </DialogFooter>
+              </DialogContent>
             </Dialog>
 
             <OrderSheet />

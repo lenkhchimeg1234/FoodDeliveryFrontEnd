@@ -24,7 +24,7 @@ export const FoodCategoryProvider = ({ children }) => {
   const getCategory = async () => {
     setLoading(true);
     try {
-      const res = await axios.get("http://localhost:247/foodcategory");
+      const res = await axios.get("https://fooddeliverybackend-cgbs.onrender.com/foodcategory");
 
       setCategories(res.data);
     } catch (error) {
@@ -38,7 +38,7 @@ export const FoodCategoryProvider = ({ children }) => {
     try {
       const token = localStorage.getItem("token") || "";
       await axios.post(
-        "http://localhost:247/foodcategory",
+        "https://fooddeliverybackend-cgbs.onrender.com/foodcategory",
         {
           categoryName: categoryName,
         },
@@ -60,7 +60,7 @@ export const FoodCategoryProvider = ({ children }) => {
   const deleteCategory = async (id) => {
     const token = localStorage.getItem("token") || "";
     try {
-      await axios.delete(`http://localhost:247/foodcategory/${id}`, {
+      await axios.delete(`https://fooddeliverybackend-cgbs.onrender.com/foodcategory/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -77,7 +77,7 @@ export const FoodCategoryProvider = ({ children }) => {
   const getFood = async (id) => {
     // setLoading(true);
     try {
-      const res = await axios.get(`http://localhost:247/food/${id}`);
+      const res = await axios.get(`https://fooddeliverybackend-cgbs.onrender.com/food/${id}`);
 
       setFoodList((prev) => {
         const exists = prev.some((item) => item.id === id);
@@ -103,7 +103,7 @@ export const FoodCategoryProvider = ({ children }) => {
     try {
       const token = localStorage.getItem("token") || "";
       const res = await axios.post(
-        "http://localhost:247/food",
+        "https://fooddeliverybackend-cgbs.onrender.com/food",
         {
           ...food,
           category: id,
@@ -123,7 +123,7 @@ export const FoodCategoryProvider = ({ children }) => {
   const deleteFood = async (id) => {
     try {
       const token = localStorage.getItem("token") || "";
-      await axios.delete(`http://localhost:247/food/${id}`, {
+      await axios.delete(`https://fooddeliverybackend-cgbs.onrender.com/food/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -141,7 +141,7 @@ export const FoodCategoryProvider = ({ children }) => {
     try {
       const token = localStorage.getItem("token") || "";
       await axios.put(
-        `http://localhost:247/food/${id}`,
+        `https://fooddeliverybackend-cgbs.onrender.com/food/${id}`,
         {
           foodName: foodUpdate.foodName,
           price: foodUpdate.price,

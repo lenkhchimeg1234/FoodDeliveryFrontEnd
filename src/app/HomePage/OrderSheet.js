@@ -34,6 +34,7 @@ export function OrderSheet({}) {
   const [activeTab, setActiveTab] = useState("cart");
   const [cart, setCart] = useState([]);
   const [open, setOpen] = useState(false);
+  const [location, setLocation] = useState("");
 
   const getFoodOrder = () => {
     const cart = JSON.parse(localStorage.getItem("cart")) || [];
@@ -133,6 +134,11 @@ export function OrderSheet({}) {
       setOpen(true);
     }
   };
+  useEffect(() => {
+    const saved = localStorage.getItem("location");
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setLocation(saved);
+  }, []);
 
   return (
     <Sheet>
@@ -241,7 +247,9 @@ export function OrderSheet({}) {
             <input
               className=" flex flex-col items-start p-[8px_12px] flex-1 self-stretch  rounded-[6px] border border-[#E4E4E7] bg-white shadow-sm"
               placeholder="Please share your complete address"
-            ></input>
+            >
+              {location}
+            </input>
           </div>
 
           <div className="flex flex-col items-start justify-between p-4 gap-5 self-stretch rounded-[20px] bg-white">

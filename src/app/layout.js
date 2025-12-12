@@ -24,10 +24,11 @@ export default function RootLayout({ children }) {
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <FoodCategoryProvider>
-          <OrderSheet>{children}</OrderSheet>
-        </FoodCategoryProvider>
+        <FoodCategoryProvider>{children}</FoodCategoryProvider>
       </body>
     </html>
   );
+}
+{
+  /* <OrderSheet>{children}</OrderSheet> */
 }

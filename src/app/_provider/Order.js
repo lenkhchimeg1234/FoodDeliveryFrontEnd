@@ -22,7 +22,9 @@ export const OrderProvider = ({ children }) => {
   const getOrder = async () => {
     setLoading(true);
     try {
-      const res = await axios.get("http://localhost:247/foodorder/userId");
+      const res = await axios.get(
+        "https://fooddeliverybackend-cgbs.onrender.com/foodorder/userId"
+      );
       setOrder(res.data);
     } catch (error) {
       console.log("Order is not found", error);
@@ -38,7 +40,9 @@ export const OrderProvider = ({ children }) => {
   const getFoodOrder = async () => {
     setLoading(true);
     try {
-      const res = await axios.get("http://localhost:247/foodorder");
+      const res = await axios.get(
+        "https://fooddeliverybackend-cgbs.onrender.com/foodorder"
+      );
       setFoodOrder(res.data);
     } catch (error) {
       console.log("Order is not found", error);
@@ -55,7 +59,7 @@ export const OrderProvider = ({ children }) => {
     try {
       const token = localStorage.getItem("token") || "";
       await axios.post(
-        "http://localhost:247/foodorder",
+        "https://fooddeliverybackend-cgbs.onrender.com/foodorder",
 
         {
           headers: {
