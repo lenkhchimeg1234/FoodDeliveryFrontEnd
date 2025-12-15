@@ -25,9 +25,11 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { useOrder } from "../_provider/Order";
 
 export function OrderSheet({}) {
   const { foodList } = useFoodCategory();
+  const { getOrder, order } = useOrder();
   const router = useRouter();
   // console.log("foodList", foodList);
 
@@ -53,7 +55,7 @@ export function OrderSheet({}) {
 
     setCart(getCart);
   };
-
+  console.log("order", order);
   // const [token, setToken] = useState(null);
 
   const handleClickLogin = () => {
@@ -322,7 +324,16 @@ export function OrderSheet({}) {
               </div>
             </div>
           )}
-          {activeTab === "order" && <div>hello order</div>}
+          {activeTab === "order" && (
+            <div className="bg-white flex flex-col justify-between items-start p-4 flex-1 self-stretch gap-5 rounded-[20px]">
+              <h1 className="text-(--text-text-muted-foreground,#71717A) font-inter   text-[20px] font-semibold leading-7  tracking-[-0.5px]">
+                Order history
+              </h1>
+              {order.map((item) => (
+                <div key={item.id}></div>
+              ))}
+            </div>
+          )}
         </div>
       </SheetContent>
     </Sheet>

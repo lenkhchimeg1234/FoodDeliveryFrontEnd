@@ -25,7 +25,16 @@ export const OrderProvider = ({ children }) => {
       const res = await axios.get(
         "https://fooddeliverybackend-cgbs.onrender.com/foodorder/userId"
       );
-      setOrder(res.data);
+      setOrder((prev) => {
+        const exist = prev.some((item) => item.id === userId);
+        if (exist) {
+          return prev.map((item) =>
+            item.id === userId ? { ...item, data: res.data } : item
+          );
+        }
+        return [...prev, { id, data: res.data }];
+      });
+      console.log("item", item);
     } catch (error) {
       console.log("Order is not found", error);
     } finally {
@@ -81,6 +90,7 @@ export const OrderProvider = ({ children }) => {
       value={{
         getOrder,
         createOrder,
+        order,
       }}
     >
       {children}
