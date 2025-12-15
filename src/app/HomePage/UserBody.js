@@ -5,7 +5,7 @@ import { useFoodCategory } from "@/app/_provider/food-category";
 import { Foods } from "./Foods";
 
 export function UserBody() {
-  const { categories, foodList, getFood } = useFoodCategory();
+  const { categories } = useFoodCategory();
 
   return (
     <div>

@@ -34,8 +34,8 @@ import {
 
 export const FoodCard = ({ item, category }) => {
   const { updateFood, deleteFood, categories, getCategory } = useFoodCategory();
-  console.log(category, "category");
-  console.log(item, "item");
+  // console.log(category, "category");
+  // console.log(item, "item");
 
   const [foodUpdate, setFoodUpdate] = useState({
     foodName: item?.foodName,

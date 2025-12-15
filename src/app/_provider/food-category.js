@@ -3,6 +3,7 @@
 import axios from "axios";
 import { createContext, useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import { BACK_END_URL } from "@/app/_constant/index";
 
 const FoodCategoryContext = createContext(null);
 
@@ -20,11 +21,12 @@ export const FoodCategoryProvider = ({ children }) => {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);
   const [foodList, setFoodList] = useState([]);
+  const [foods, setFoods] = useState([]);
 
   const getCategory = async () => {
     setLoading(true);
     try {
-      const res = await axios.get("https://fooddeliverybackend-cgbs.onrender.com/foodcategory");
+      const res = await axios.get(`${BACK_END_URL}/foodcategory`);
 
       setCategories(res.data);
     } catch (error) {
@@ -38,7 +40,7 @@ export const FoodCategoryProvider = ({ children }) => {
     try {
       const token = localStorage.getItem("token") || "";
       await axios.post(
-        "https://fooddeliverybackend-cgbs.onrender.com/foodcategory",
+        `${BACK_END_URL}/foodcategory`,
         {
           categoryName: categoryName,
         },
@@ -60,7 +62,7 @@ export const FoodCategoryProvider = ({ children }) => {
   const deleteCategory = async (id) => {
     const token = localStorage.getItem("token") || "";
     try {
-      await axios.delete(`https://fooddeliverybackend-cgbs.onrender.com/foodcategory/${id}`, {
+      await axios.delete(`${BACK_END_URL}/foodcategory${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -75,9 +77,8 @@ export const FoodCategoryProvider = ({ children }) => {
   };
 
   const getFood = async (id) => {
-    // setLoading(true);
     try {
-      const res = await axios.get(`https://fooddeliverybackend-cgbs.onrender.com/food/${id}`);
+      const res = await axios.get(`${BACK_END_URL}/food/${id}`);
 
       setFoodList((prev) => {
         const exists = prev.some((item) => item.id === id);
@@ -98,12 +99,23 @@ export const FoodCategoryProvider = ({ children }) => {
       //   setLoading(false);
     }
   };
+  const getFoods = async (id) => {
+    try {
+      const res = await axios.get(`${BACK_END_URL}/food/`);
+      console.log("This is Foods", res);
+      setFoods(res.data);
+    } catch (error) {
+      console.error("Food is not found", error);
+    } finally {
+      //   setLoading(false);
+    }
+  };
 
   const createFood = async (id, food) => {
     try {
       const token = localStorage.getItem("token") || "";
       const res = await axios.post(
-        "https://fooddeliverybackend-cgbs.onrender.com/food",
+        `${BACK_END_URL}/food`,
         {
           ...food,
           category: id,
@@ -123,7 +135,7 @@ export const FoodCategoryProvider = ({ children }) => {
   const deleteFood = async (id) => {
     try {
       const token = localStorage.getItem("token") || "";
-      await axios.delete(`https://fooddeliverybackend-cgbs.onrender.com/food/${id}`, {
+      await axios.delete(`${BACK_END_URL}/food/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -141,7 +153,7 @@ export const FoodCategoryProvider = ({ children }) => {
     try {
       const token = localStorage.getItem("token") || "";
       await axios.put(
-        `https://fooddeliverybackend-cgbs.onrender.com/food/${id}`,
+        `${BACK_END_URL}/food/${id}`,
         {
           foodName: foodUpdate.foodName,
           price: foodUpdate.price,
@@ -167,6 +179,9 @@ export const FoodCategoryProvider = ({ children }) => {
   useEffect(() => {
     getCategory();
   }, []);
+  useEffect(() => {
+    getFoods();
+  }, []);
 
   return (
     <FoodCategoryContext.Provider
@@ -181,6 +196,7 @@ export const FoodCategoryProvider = ({ children }) => {
         deleteFood,
         updateFood,
         getCategory,
+        foods,
       }}
     >
       {children}
